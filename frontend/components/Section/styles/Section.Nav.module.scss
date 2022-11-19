@@ -1,0 +1,68 @@
+@import "styles/colorscheme.scss";
+// transform - ебануть много translate пропсов чтобы ебашить
+// translate - ебануть по x y z оси в сторонку
+// transition - указать как ебашить, время, временная функция и пропс
+
+.nav {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        text-align: right;
+        z-index: 20;
+        pointer-events: none;
+
+        .nav-content {
+                position: sticky;
+                width: 8rem;
+                line-height: 2rem;
+                padding-top: calc(3.5rem + (2.25em - 1.6rem));
+                display: inline-block;
+                text-align: left;
+                top: 0px;
+                font-family: "OpenSauceSans";
+                pointer-events: auto;
+
+                .title {
+                        padding-bottom: 1.5rem;
+                        font-size: 1.2rem;
+                        line-height: 1.25;
+                        font-weight: bold;
+                        color: $white;
+                        display: block;
+                }
+
+                .link {
+                        color: $commentGrey;
+                        text-decoration: none;
+                        cursor: pointer;
+                        clear: none;
+                        display: block;
+                        font-weight: normal;
+                        line-height: 1.2rem;
+
+                        .mark {
+                                top: 1px;
+                                display: inline;
+                                position: relative;
+                                margin-left: 0.5rem;
+                                width: 1rem;
+                                height: 1rem;
+                        }
+                }
+
+                .link:hover {
+                        color: $white;
+                        font-weight: bold;
+                        // font-size: 110%;
+                }
+
+                .is-active {
+                        transition: font-weight 0.3s easy-in;
+                        color: $white;
+                        font-weight: bold;
+                        font-size: 110%;
+                }
+        }
+}

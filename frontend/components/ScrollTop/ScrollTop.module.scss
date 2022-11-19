@@ -1,0 +1,75 @@
+@import './../../styles/colorscheme.scss';
+
+.is-active {
+        opacity: 0.5;
+        pointer-events: auto;
+}
+
+.not-active {
+        cursor: default;
+        opacity: 0;
+}
+
+.scroll-to-top {
+        pointer-events: auto;
+        position: sticky;
+        bottom: 0px;
+        right: 0px;
+        z-index: 40;
+        max-width: 7rem;
+
+        display: block;
+        padding-bottom: 4rem;
+        margin-top: 1.5rem;
+
+        float: right;
+
+        mix-blend-mode: difference;
+
+        transition-property: opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+
+        a {
+                white-space: nowrap;
+                display: flex;
+                justify-content: flex-end;
+                text-decoration: none;
+                color: $black;
+                position: relative;
+
+                .text {
+                        position: relative;
+                        clear: none;
+                        display: inline-block;
+                        align-self: center;
+                }
+
+                .wrapper {
+                        display: inline-block;
+                        margin-left: 0.5rem;
+
+                        .button {
+                                display: flex;
+                                height: 1.5rem;
+                                width: 1.5rem;
+                                align-items: center;
+                                justify-content: center;
+                                // border-radius: 9999px;
+                                border-radius: 100%;
+                                border: 2px solid $black;
+                                padding: 0.25rem;
+
+                                .up-arrow {
+                                        display: block;
+                                        width: 1rem;
+                                        fill: $black;
+                                }
+                        }
+                }
+        }
+}
+
+.scroll-to-top.is-active:hover {
+        opacity: 1;
+}

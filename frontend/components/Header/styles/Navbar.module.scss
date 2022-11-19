@@ -1,0 +1,294 @@
+@import "styles/colorscheme.scss";
+
+$menuIconLinesColor: $green;
+
+.header-content {
+        font-family: Roboto;
+        z-index: 70;
+        position: sticky;
+        height: 7vh;
+        font-size: 18px;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: stratch;
+
+        // background-image: radial-gradient(ellipse at top, #090A0F 0%, #1B2735 50%, transparent 60%);
+        background-image: linear-gradient(#090A0F, transparent);
+        // background: transparent;
+        // background: $white;
+        // background
+
+        overflow: hidden;
+
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        // set width to 120 and use the half of logo and two rows of text "UFO Records"
+        .logo-wrapper {
+                z-index: 70;
+                position: relative;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                background: transparent;
+                font-size: 20px;
+
+                .logo {
+                        transition: filter 0.5s;
+                        cursor: pointer;
+                        position: relative;
+                        display: block;
+                        height: 52px;
+
+                }
+
+                .title-wrapper {
+                        cursor: pointer;
+                        display: block;
+                        position: relative;
+                        align-self: center;
+                        color: $green;
+                        padding-left: 5px;
+                        font-size: 40px;
+                        word-wrap: break-word;
+
+                        .title {
+                                display: inline-block;
+                                overflow: hidden;
+                                position:relative;
+                                &:before {
+                                        content: "";
+                                        position: absolute;
+                                        height: 150px;
+                                        width: 30px;
+                                        background : #fff;
+                                        // right: -40px;
+                                        top: -40px;
+                                        transform: rotate(37deg);
+                                        transition: all .7s ease-in-out;
+                                        opacity: 0.3;
+                                        right: 115%;
+                                }
+
+                                &:hover:before {
+                                        // right: -25%;
+                                        animation: blik 2.4s;
+                                        animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+                                        // transition: all 0s;
+                                }
+
+                                @keyframes blik {
+                                from {
+                                        right: 115%;
+                                }
+                                to {
+                                        right: -25%;
+                                }
+                                }
+                        }
+
+                        * {
+                                font-family: "Amazing Views";
+                                transition: color 0.5s;
+                        }
+
+                        .ufo-ship {
+                                position: absolute;
+                                display: block;
+                                // width: 40px;
+                                // height: 10px;
+                                // background-color: $green;
+                                top: -64px;
+                                left: 42px;
+                                // transform: translatey(0px);
+                                // transform: translatex(0px);
+                                // animation: shipFly 5s ease-in-out infinite;
+                        }
+
+                        @keyframes shipFly {
+                        0% {
+                                // box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+                                transform: translateX(0px) translateY(0px);
+                        }
+                        50% {
+                                // box-shadow: 0 25px 15px 0px rgba(0,0,0,0.2);
+                                transform: translateX(206px) translateY(0px);
+                        }
+                        100% {
+                                // box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+                                transform: translateX(0px) translateY(0px);
+                        }
+                        }
+                }
+
+                &:hover {
+                        .title-wrapper {
+                                span {
+                                }
+
+                                .ufo-ship {
+                                }
+                        }
+                }
+        }
+
+        .navbar {
+                z-index: 70;
+                display: flex;
+                flex-direction: row;
+                align-items: stratch;
+
+                * {
+                        clear: none;
+                }
+
+                .menu-button {
+                        --menu-toggled-color: $purple1;
+                        margin: -0.75rem;
+                        margin-left: -0.75rem;
+                        margin-left: 2.25rem;
+                        cursor: pointer;
+                        padding: 0.75rem;
+                        display: flex;
+                        align-items: center;
+
+                        .menu-icon {
+                                z-index: 70;
+                                position: relative;
+                                display: inline-block;
+                                display: flex;
+                                height: 2.5rem;
+                                width: 2.5rem;
+                                align-items: center;
+
+                                font-size: 1rem;
+                                opacity: 0.75;
+                                transition-property: opacity;
+                                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                                transition-duration: 200ms;
+
+                                cursor: pointer;
+
+                                display: flex;
+                                justify-content: space-around;
+                                flex-direction: column;
+
+                                span {
+                                        white-space: nowrap;
+                                        position: relative;
+                                        height: 0.25rem;
+                                        width: 2.5rem;
+                                        background-color: $menuIconLinesColor;
+                                        transform-origin: center;
+                                        transition: transform 0.1s linear;
+                                }
+
+                                span.rotate45 {
+                                        transform: rotate(45deg);
+                                }
+
+                                span.rotate-45 {
+                                        transform: rotate(-45deg);
+                                }
+
+                                span.toggled {
+                                        position: absolute;
+                                        transition: transform 0.1s linear;
+                                        background-color: $purple2;
+                                }
+
+                                span.shorted {
+                                        width: 1.7rem;
+                                        align-self: flex-start;
+                                }
+                        }
+                }
+
+                .separator {
+                        margin-left: 0.5em;
+                        margin-right: 0.5em;
+                        width: 1px;
+                        color: $black;
+                        height: 60%;
+                        position: relative;
+                        align-self: center;
+                }
+
+                .profile {
+                        margin-left: 1em;
+                        margin-right: 1em;
+                        display: block;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 100%;
+                        background: $green;
+                }
+
+                .link {
+                        padding: 0px;
+                        margin: 0px;
+                        margin-right: -20px;
+                        cursor: pointer;
+                        align-self: center;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+                        text-decoration: none;
+
+                        // translate: width 0.5s inline;
+
+                        // .go-down {
+                        //         display: inlin-block;
+                        //         position: relative;
+                        //         top: 2px;
+                        //         display: none;
+                        // }
+                        //
+                        // &:hover {
+                        //         .go-down {
+                        //                 opacity: 1;
+                        //                 animation: go-down-animation 1s ease infinite;
+                        //                 display: inline-block;
+                        //                 margin-left: 0.5rem;
+                        //         }
+                        //
+                        //         @keyframes go-down-animation {
+                        //         from {
+                        //                 transform: translateY(-8px);
+                        //                 opacity: 0;
+                        //         }
+                        //         to {
+                        //                 transform: translateY(5px);
+                        //                 opacity: 1;
+                        //         }
+                        //         }
+                        // }
+
+                        // font-family: Open Sans;
+                        * {
+                                font-size: 16px;
+                        }
+
+                        .title {
+                                color: $black;
+                        }
+
+                        .memo {
+                                font-size: 90%;
+                                transition: color 0.4s linear;
+                                color: $gutterGrey;
+                        }
+                }
+
+                .link:hover {
+                        .memo {
+                                transition: color 0.1s linear;
+                                color: $black;
+                        }
+                }
+        }
+}

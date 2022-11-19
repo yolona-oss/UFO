@@ -1,0 +1,216 @@
+import React, { Ref, useEffect, useRef, useState } from 'react'
+
+import styles from './Slider.module.scss'
+
+import { convertCssUnits } from 'helpers'
+import { useIsVisible } from 'react-is-visible'
+import Node from './components/Node'
+export { Node }
+
+        let nodes = new Map<number, HTMLElement>()
+function Slider(props: Props) {
+
+        const scrollerRef = useRef<HTMLDivElement>() 
+        let [activeNodeInd, setActiveNodeInd] = useState(0)
+        let [isSwiping, setIsSwiping] = useState(false)
+        let [swipScrollInitialOffset, setSwipScrollInitialOffset] = useState(0)
+        let [swipStartCursor, setSwipStartCursor] = useState({x: 0, y: 0})
+        let [nodeWidth, setNodeWidth] = useState(0)
+        let [autoScroll, setAutoScroll] = useState(false)
+        let isVisible = useIsVisible(scrollerRef)
+
+        function scrollTo(i: number) {
+                if (!nodes.has(i)) {
+                        console.error("Slider::scrollTo() cannot scroll to element with ind", i, "Reason: element unexists")
+                        return
+                }
+                scrollerRef.current?.scrollTo(nodes.get(i)!.offsetLeft, 0)
+        }
+
+        function onScroll() {
+                if (isSwiping) {
+                        return
+                }
+
+                const scroll = scrollerRef.current?.scrollLeft
+                let scrollPadding = props.scrollPadding ? convertCssUnits(props.scrollPadding, scrollerRef.current) : 0
+                if (scrollPadding < 0.1) {
+                        scrollPadding = 0
+                }
+                for (let [ind, elementRef] of nodes) {
+                        if (scroll == elementRef.offsetLeft - scrollPadding) {
+                                setActiveNodeInd(ind)
+                                break;
+                        }
+                }
+
+        }
+
+        function swipStart(ev: any) {
+                setAutoScroll(false)
+                // @ts-ignore
+                scrollerRef.current.style["scroll-snap-type"] = "none" // proximity
+                setIsSwiping(true)
+                setSwipScrollInitialOffset(scrollerRef.current!.scrollLeft)
+                setSwipStartCursor({x: ev.clientX, y: ev.clientY})
+                setActiveNodeInd(-228)
+        }
+
+        function swipEnd() {
+                const scrollOffset = scrollerRef.current!.scrollLeft
+                let min_distance = Number.MAX_SAFE_INTEGER
+                let min_distnace_node_ind = -1
+                for (let [ ind, node ] of nodes) {
+                        if (Math.abs(scrollOffset - node.offsetLeft) < min_distance) {
+                                min_distance = node.offsetLeft
+                                min_distnace_node_ind = ind
+                        }
+                }
+
+                if (min_distnace_node_ind > 0) {
+                        scrollTo(min_distnace_node_ind)
+                }
+
+                // @ts-ignore
+                scrollerRef.current.style["scroll-snap-type"] = "x mandatory"
+                setIsSwiping(false)
+                setSwipScrollInitialOffset(0)
+                setAutoScroll(true)
+        }
+
+        function swipMove(ev: any) {
+                if (isSwiping) {
+                        const curScroll = swipScrollInitialOffset
+                        const cursorInitialOffset = swipStartCursor.x
+                        const currentCursorOffset = ev.clientX
+                        scrollerRef.current?.scrollTo(curScroll + cursorInitialOffset-currentCursorOffset, 0)
+                }
+        }
+
+        useEffect(() => {
+                if (props.interval && props.interval > 0) {
+                        setAutoScroll(true)
+                }
+                if (props.scrollPadding) {
+                        scrollerRef.current!.style["scroll-padding-left"] = props.scrollPadding
+                }
+
+                const calcInitialScroll = () => convertCssUnits(props.scrollPadding, scrollerRef.current)
+                scrollerRef.current?.scrollTo(props.scrollPadding ? calcInitialScroll() : 0, 0)
+
+                if (nodes.size > 0) {
+                        // with zero width get offset
+                        const scrollerWidth = scrollerRef.current!.offsetWidth
+                        const initialNodeWidthOffset = nodes.get(0)!.offsetWidth
+                        const countToPlace = props.visibleNodes ?? 1
+                        setNodeWidth((scrollerWidth-initialNodeWidthOffset*countToPlace) / countToPlace)
+                }
+
+                setTimeout(() => scrollerRef.current!.style!.opacity = "1", 100)
+        }, [])
+
+        if (props.interval && props.interval > 0) {
+                let [intervalId, setIntervalId] = useState(0)
+                useEffect(() => {
+                        console.log("auto scroll:", autoScroll)
+
+                        if (autoScroll) {
+                                let _intervalId = setInterval(() => {
+                                        try {
+                                                const nextInd = (activeNodeInd >= nodes.size-1 ? 0 : activeNodeInd+1)
+                                                const nextNode = nodes.get(nextInd)
+                                                if (nextNode) {
+                                                        scrollerRef.current?.scrollTo(nextNode.offsetLeft, 0)
+                                                        setActiveNodeInd(nextInd)
+                                                } else {
+                                                        console.error("Slider::scrollNext() cannot perform scroll. Reason: next node undefined.",
+                                                                "Avalible nodes:", nodes,
+                                                                "nextInd:", nextInd
+                                                        )
+                                                }
+                                        } catch (e) {
+                                                console.error(e)
+                                        }
+                                }, props.interval)
+                                setIntervalId(_intervalId)
+                        } else {
+                                clearInterval(intervalId)
+                                setIntervalId(0)
+                        }
+
+                        return () => clearInterval(intervalId)
+                }, [autoScroll])
+        }
+
+        useEffect(() => {
+                if (isVisible) {
+                        if (props.interval && props.interval > 0) {
+                                setActiveNodeInd(activeNodeInd+1)
+                                setActiveNodeInd(activeNodeInd)
+                                setAutoScroll(true)
+                        }
+                } else {
+                        setAutoScroll(false)
+                }
+        }, [isVisible])
+
+        const children = props.children
+
+        return (
+                <div className={styles.wrapper}>
+                        <div
+                                ref={scrollerRef}
+                                style={{ opacity: "0" }}
+                                className={styles["nodes-wrapper"]}
+                                onScroll={onScroll}
+                                // onmousedown={swipStart}
+                                // onmouseup={swipEnd}
+                                // onmousemove={swipMove}
+                        >
+                                {React.Children.map(children, (child, i) => {
+                                        const isNodeActive = (activeNodeInd == i)
+                                        // @ts-ignore
+                                        return React.cloneElement(child, {
+                                                // @ts-ignore
+                                                ...child.props,
+                                                ref: (ref: any) => nodes.set(i, ref),
+                                                width: nodeWidth,
+                                                height: props.height,
+                                                timeout: props.interval,
+                                                active: isNodeActive,
+                                                class: props.nodeClass,
+                                                activeClass: props.activeNodeClass,
+                                                key: i,
+                                                __swipEnd: swipEnd,
+                                                __swipStart: swipStart,
+                                                __swipMove: swipMove,
+                                        })
+                                })}
+                        </div>
+                </div>
+        )
+}
+
+interface Props {
+        children?: React.ReactElement<Node>[]
+        interval: number
+        height: string
+        visibleNodes?: number
+        node?: string
+        scrollPadding?: string
+        activeNodeClass?: string
+        nodeClass?: string
+}
+
+const defaultProps = {
+        children: [],
+        visibleNodes: 1,
+        height: "10vh",
+        scrollPadding: "0px",
+        activeNodeClass: "",
+        nodeClass: ""
+}
+
+Slider.defaultProps = defaultProps
+
+export default Slider

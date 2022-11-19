@@ -1,0 +1,204 @@
+import React, { Ref } from 'react'
+
+import styles from './Slider.module.scss'
+
+import { convertCssUnits } from 'helpers'
+import IsVisible from 'react-is-visible'
+import Node from './components/Node'
+export { Node }
+
+interface Props {
+        children?: React.ReactElement<Node>[]
+        interval: number
+        nodeWidth?: string
+        nodeHeight?: string
+        active?: () => boolean
+        scrollPadding?: string
+
+        activeNodeClass?: string
+        nodeClass?: string
+}
+
+interface State {
+        isActive: boolean
+        activeNodeInd: number
+        isDraging: boolean
+        dragScrollInitialOffset: number
+        dragStartCursor: { x: number, y: number }
+}
+
+export default class extends React.Component<Props, State> {
+        private scrollerRef: Ref<HTMLDivElement>
+        private rootRef: Ref<HTMLDivElement>
+        private nodes: Map<number, HTMLElement>
+        private intervalId: any
+
+        constructor(props: Props) {
+                super(props)
+                this.scrollerRef = React.createRef<HTMLDivElement>()
+                this.rootRef = React.createRef<HTMLDivElement>()
+                this.nodes = new Map()
+
+                this.scrollNext = this.scrollNext.bind(this)
+                this.onScroll = this.onScroll.bind(this)
+
+                this.state = {
+                        activeNodeInd: 0,
+                        isDraging: false,
+                        dragScrollInitialOffset: 0,
+                        isActive: true,
+                        dragStartCursor: { x: 0, y: 0 }
+                }
+
+        }
+
+        scrollNext() {
+                try {
+                        const nextInd = (this.state.activeNodeInd >= this.nodes.size-1 ? 0 : this.state.activeNodeInd+1)
+                        const nextNode = this.nodes.get(nextInd)
+                        // @ts-ignore
+                        this.scrollerRef.current.scrollTo(nextNode.offsetLeft, 0)
+                        this.setState({activeNodeInd: nextInd})
+                } catch (e) {
+                        console.error(e)
+                }
+        }
+
+        scrollTo(i: number) {
+                if (!this.nodes.has(i)) {
+                        return
+                }
+                // @ts-ignore
+                this.scrollerRef.current.scrollTo(this.nodes.get(i)?.offsetLeft, 0)
+        }
+
+        onScroll() {
+                if (this.state.isDraging) {
+                        return
+                }
+
+                this.resetAutoScrollTimer()
+                // @ts-ignore
+                const scroll = this.scrollerRef.current.scrollLeft
+                const scrollPadding = this.props.scrollPadding ? convertCssUnits(this.props.scrollPadding, this.scrollerRef.current) : 0
+                for (let [ind, elementRef] of this.nodes) {
+                        if (scroll == elementRef.offsetLeft - scrollPadding) {
+                                this.setState({activeNodeInd: ind})
+                                break;
+                        }
+                }
+        }
+
+        resetAutoScrollTimer() {
+                clearInterval(this.intervalId)
+                this.intervalId = setInterval(this.scrollNext, this.props.interval)
+        }
+
+        componentDidMount() {
+                if (this.props.interval && this.props.interval > 0) {
+                        this.intervalId = setInterval(this.scrollNext, this.props.interval)
+                }
+                if (this.props.scrollPadding) {
+                        this.scrollerRef.current!.style["scroll-padding-left"] = this.props.scrollPadding
+                }
+                this.scrollerRef.current!.scrollTo(this.props.scrollPadding ? this.props.scrollPadding : 0, 0)
+
+        }
+
+        componentWillUnmount() {
+                clearInterval(this.intervalId)
+        }
+
+        dragStart(ev: any) {
+                clearInterval(this.intervalId)
+                // @ts-ignore
+                this.scrollerRef.current.style["scroll-snap-type"] = "x none" // proximity
+                this.setState({
+                        isDraging: true,
+                        dragScrollInitialOffset: this.scrollerRef.current.scrollLeft,
+                        dragStartCursor: {x: ev.clientX, y: ev.clientY},
+                        activeNodeInd: -228
+                })
+        }
+
+        dragEnd() {
+                const scrollOffset = this.scrollerRef.current.scrollLeft
+                let min_distance = Number.MAX_SAFE_INTEGER
+                let min_distnace_node_ind = -1
+                for (let [ ind, node ] of this.nodes) {
+                        if (Math.abs(scrollOffset - node.offsetLeft) < min_distance) {
+                                min_distance = node.offsetLeft
+                                min_distnace_node_ind = ind
+                        }
+                }
+
+                if (min_distnace_node_ind > 0) {
+                        this.scrollTo(min_distnace_node_ind)
+                        // this.containerRef.current.scrollTo(scrollOffset - min_distance, 0)
+                        // this.setState({activeNodeInd: min_distnace_node_ind})
+                }
+
+                // @ts-ignore
+                this.scrollerRef.current.style["scroll-snap-type"] = "x mandatory"
+                this.setState({isDraging: false, dragScrollInitialOffset: 0})
+                this.resetAutoScrollTimer()
+        }
+
+        dragMove(ev: any) {
+                if (this.state.isDraging) {
+                        const curScroll = this.state.dragScrollInitialOffset
+                        const cursorInitialOffset = this.state.dragStartCursor.x
+                        const currentCursorOffset = ev.clientX
+                        // @ts-ignore
+                        this.scrollerRef.current.scrollTo(curScroll + cursorInitialOffset-currentCursorOffset, 0)
+                }
+        }
+
+
+        render() {
+                const children = this.props.children
+
+                return (
+                        <IsVisible>
+                                {(( isVisible: boolean ) => {
+                                        if (!isVisible) {
+                                                clearInterval(this.intervalId)
+                                        } else {
+                                                if (this.props.interval && this.props.interval > 0) {
+                                                        this.resetAutoScrollTimer()
+                                                }
+                                        }
+                                        return (
+                                                <div ref={this.rootRef} className={styles.wrapper}>
+                                                        <div
+                                                                ref={this.scrollerRef}
+                                                                className={styles["nodes-wrapper"]}
+                                                                onScroll={this.onScroll}
+                                                        >
+                                                                {React.Children.map(children, (child, i) => {
+                                                                        const isActive = (this.state.activeNodeInd == i)
+                                                                        // @ts-ignore
+                                                                        return React.cloneElement(child, {
+                                                                                // @ts-ignore
+                                                                                ...child.props,
+                                                                                ref: (ref: any) => {this.nodes.set(i, ref); return true;},
+                                                                                width: this.props.nodeWidth,
+                                                                                height: this.props.nodeHeight,
+                                                                                timeout: this.props.interval,
+                                                                                active: isActive,
+                                                                                class: this.props.nodeClass,
+                                                                                activeClass: this.props.activeNodeClass,
+                                                                                key: i,
+                                                                                __dragEnd: this.dragEnd.bind(this),
+                                                                                __dragStart: this.dragStart.bind(this),
+                                                                                __dragMove: this.dragMove.bind(this)
+                                                                        })
+                                                                })}
+                                                        </div>
+                                                </div>
+                                        )
+                                })}
+                        </IsVisible>
+                )
+        }
+}

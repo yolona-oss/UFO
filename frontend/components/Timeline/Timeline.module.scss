@@ -1,0 +1,48 @@
+.r-title{
+        margin-top: var(--rTitleMarginTop, 0) !important;
+        margin-bottom: var(--rTitleMarginBottom, 0) !important;
+}
+
+
+p:not([class]){
+        line-height: var(--cssTypographyLineHeight, 1.78);
+        margin-top: var(--cssTypographyBasicMargin, 1em);
+        margin-bottom: 0;
+}
+
+p:not([class]):first-child{
+        margin-top: 0;
+}
+
+/*
+text component
+*/
+
+.text{
+        display: var(--textDisplay, inline-flex);
+        font-size: var(--textFontSize, 1rem);  
+}
+
+/*
+time component
+*/
+
+/*
+core styles
+*/
+
+.time{
+        display: var(--timeDisplay, inline-flex);
+}
+
+/*
+extensions
+*/
+
+.time__month{
+        margin-left: var(--timelineMounthMarginLeft, .25em);
+}
+
+/*
+skin
+*/

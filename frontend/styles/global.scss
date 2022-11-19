@@ -1,0 +1,139 @@
+@import './fonts.scss';
+@import './colorscheme.scss';
+@import './base-animations.scss';
+@import './calendar.scss';
+
+* {
+        padding: 0;
+        margin: 0;
+        scroll-behavior: smooth;
+}
+
+html, body {
+        font-family: Open Sause Sans;
+        box-sizing: border-box;
+        line-height: 24px;
+        overflow: scroll;
+        scroll-snap-type: y mandatory;
+        height: 100%;
+        position: relative;
+        // background-color: $black;
+        overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+}
+
+.centred {
+        margin: auto auto;
+}
+
+.invisible {
+        opacity: 0;
+}
+
+.visible {
+        opacity: 1;
+}
+
+.disabled {
+        display: none;
+}
+
+.header {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        height: 0px;
+}
+
+.segment {
+        padding-right: 2rem;
+        padding-left: 2rem;
+}
+
+#scrollTopAnchor {
+        position: relative;
+}
+
+.background {
+        z-index: -2;
+        position: absolute;
+        // top: 0px;
+        // right: 0px;
+        // width: 100vw;
+        // height: 100vh;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+}
+
+.background-fullscreen {
+        z-index: -2;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        bottom: 0px;
+        overflow: hidden;
+}
+
+.background-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+}
+
+// *, ::before, ::after {
+// }
+
+@keyframes ld-speed-dash {
+0% { transform: translate(0,0); }
+50% { transform: translate(417px,0); }
+100% { transform: translate(0,0); }
+}
+.ld.ld-speed-dash {
+        animation: ld-speed-dash 0.5s linear infinite;
+}
+
+.flex {
+        display: flex;
+}
+
+.justify-center {
+        justify-content: center;
+}
+
+.align-center {
+        align-items: center;
+}
+
+@mixin hideShowTransition {
+        transition-duration: 500ms;
+        transition-delay: 0ms;
+        transition-property: opacity;
+        transition-timing-function: ease-in;
+}
+
+.hidden {
+        opacity: 0;
+        @include hideShowTransition();
+}
+
+.active {
+        opacity: 1;
+        @include hideShowTransition();
+}
+
+.left {
+        display: inline;
+        float: left;
+}
+
+.right {
+        display: inline;
+        float: right;
+}

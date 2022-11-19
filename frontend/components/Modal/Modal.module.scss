@@ -1,0 +1,30 @@
+.modal {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(128, 128, 128, 0.1);
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        bottom: 0px;
+
+        .view {
+                position: relative;
+                display: block;
+
+                .close {
+                        position: absolute;
+                        display: block;
+                        right: 0px;
+                        top: 0px;
+                }
+
+                .buttons {
+                        position: absolute;
+                        display: flex;
+                        justify-content: center;
+                        bottom: 0px;
+                }
+        }
+}

@@ -1,0 +1,28 @@
+.menu {
+        position: fixed;
+        display: flex;
+        flex-direction: row;
+        border-top-left-radius: 10%;
+        border-bottom-left-radius: 10%;
+        top: 50%;
+        z-index: 100;
+        background: gray;
+        right: 0px;
+
+        .tongue {
+                cursor: pointer;
+                position: relative;
+                width: 20px;
+                display: flex;
+                align-self: center;
+                align-items: center;
+                line-height: 0rem;
+                justify-content: center;
+        }
+
+        .content {
+                padding: 1rem;
+                position: relative;
+                display: block;
+        }
+}

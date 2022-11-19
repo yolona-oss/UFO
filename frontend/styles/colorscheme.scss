@@ -1,0 +1,49 @@
+$black:       #282c34;
+$white:       #abb2bf;
+$lightRed:    #e06c75;
+$darkRed:     #be5046;
+$green:       #98c379;
+$lightYello:  #e5c07b;
+$darkYellow:  #d19a66;
+$blue:        #61afef;
+$magenta:     #c678dd;
+$cyan:        #56b6c2;
+$gutterGrey:  #4b5263;
+$commentGrey: #5c6370;
+
+$purple1: #5d009f;
+$purple2: #6e12b0;
+$purple3: #8734c3;
+$purple4: #9b59c9;
+$purple5: #ae7fd0;
+
+$purple1rgba: rgba(93, 0, 159, 1);    // 
+$purple2rgba: rgba(110, 18, 176, 1);  // 
+$purple3rgba: rgba(135, 52, 195, 1);  // 
+$purple4rgba: rgba(155, 89, 201, 1);  // 
+$purple5rgba: rgba(174, 127, 208, 1); // 
+
+._1 {
+        color: #e74c3c;
+}
+
+._2 {
+        color: #8e44ad;
+}
+
+._3 {
+        color: #3498db;
+}
+
+._4 {
+        color: #2ecc71;
+}
+
+._5 {
+        color: #f1c40f;
+}
+
+:export {
+        green: $green;
+        purple1: $purple1;
+}

@@ -1,0 +1,33 @@
+@import 'styles/colorscheme.scss';
+
+.wrapper {
+        position: relative;
+        display: block;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .nodes-wrapper {
+                white-space: nowrap;
+                position: relative;
+                display: flex;
+                justify-content: flex-start;
+                align-items: normal;
+                overflow-x: scroll;
+                overflow-y: hidden;
+                scroll-behavior: smooth;
+                scroll-snap-type: x mandatory;
+                width: 100%;
+                // touch-action: pan-y;
+
+                transition-duration: 0ms;
+                transition-property: transform;
+                // box-sizing: content-box;
+
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+        }
+
+        .nodes-wrapper:-webkit-scrollbar {
+                display: none;
+        }
+}

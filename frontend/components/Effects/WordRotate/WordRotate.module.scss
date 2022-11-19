@@ -1,0 +1,35 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:600);
+
+.rotating-text {
+        color: white;
+        display: inline;
+        // transform: translateX(-80px);
+
+        p {
+                display: inline-flex;
+                margin: 0px;
+                padding: 0px;
+                vertical-align: top;
+
+                .word {
+                        position: absolute;
+                        display: flex;
+                        opacity: 0;
+
+                        .letter {
+                                transform-origin: center center 25px;
+
+                                &.out {
+                                        transform: rotateX(90deg);
+                                        transition: 0.32s cubic-bezier(0.6, 0, 0.7, 0.2);
+                                }
+                                &.in {
+                                        transition: 0.38s ease;
+                                }
+                                &.behind {
+                                        transform: rotateX(-90deg);
+                                }
+                        }
+                }
+        }
+}

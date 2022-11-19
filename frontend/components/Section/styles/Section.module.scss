@@ -1,0 +1,11 @@
+@import "styles/colorscheme.scss";
+
+.is-active {
+        pointer-events: auto;
+}
+
+.section {
+        position: relative;
+        z-index: 10;
+        border-bottom: 1px solid $black;
+}

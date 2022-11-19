@@ -1,0 +1,48 @@
+@import 'styles/colorscheme.scss';
+
+.tape {
+        // overflow: hidden;
+        // width: 1000px;
+        // display: inline-block;
+        // border: 1px solid red;
+        // height: 10rem;
+        // white-space: nowrap;
+
+        position: relative;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        // width: 100vw;
+
+        .scroller {
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                white-space: nowrap;
+                position: relative;
+                display: flex;
+                flex-wrap: nowrap;
+                // justify-content: flex-start;
+                // align-items: normal;
+                // touch-action: pan-y;
+
+                transition-duration: 0.5ms;
+                transition-property: transform;
+                transition-timing-function: ease-out;
+
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+
+                animation: move 5s infinite linear;
+        }
+
+        .nodes-wrapper:-webkit-scrollbar {
+                display: none;
+        }
+}
+
+@keyframes move {
+to {
+        transform: translateX(-50%);
+}
+}
